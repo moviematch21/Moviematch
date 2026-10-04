@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>MovieMatch — Find Your Movie</title>
+<meta name="description" content="Answer 5 quick questions and discover a movie match made for your mood.">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Arial,sans-serif;background:#0d0d12;color:#fff;min-height:100vh}
+.app{max-width:520px;margin:auto;min-height:100vh;padding:22px 18px 40px}
+.brand{font-weight:800;font-size:18px;letter-spacing:.3px;margin-bottom:38px}.brand span{color:#ff4f87}
+.hero{text-align:center;padding:20px 4px 30px}.emoji{font-size:52px;margin-bottom:14px}
+h1{font-size:34px;line-height:1.08;margin:0 0 12px}.sub{color:#b7b7c2;line-height:1.5;font-size:15px}
+button{border:0;cursor:pointer;font:inherit}.primary{width:100%;padding:16px;border-radius:16px;background:#ff4f87;color:#fff;font-weight:800;font-size:16px;margin-top:24px}
+.primary:active,.option:active,.secondary:active,.share:active{transform:scale(.98)}
+.progress{height:6px;background:#24242c;border-radius:99px;overflow:hidden;margin:8px 0 24px}
+.bar{height:100%;width:20%;background:#ff4f87;transition:.25s}
+.qnum{color:#ff7aa5;font-size:13px;font-weight:700;margin-bottom:9px}h2{font-size:25px;line-height:1.2;margin:0 0 18px}
+.options{display:grid;gap:11px}.option{background:#18181f;border:1px solid #292932;color:#fff;padding:16px;border-radius:15px;text-align:left;transition:.15s}
+.option:hover{border-color:#ff4f87}.option small{display:block;color:#9696a3;margin-top:5px}
+.result{text-align:center;padding-top:8px}.badge{display:inline-block;background:#24151d;color:#ff86a9;border:1px solid #5b263b;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:15px}
+.movie{background:#18181f;border:1px solid #2b2b35;border-radius:22px;padding:22px;text-align:left;margin-top:18px}
+.movie h3{font-size:25px;margin:0 0 7px}.movie .meta{color:#aaaab5;font-size:13px;margin-bottom:15px}.why{color:#ddd;line-height:1.55;font-size:14px}
+.matchline{margin-top:12px;color:#ff86a9;font-size:12px;font-weight:700}.actions{display:grid;gap:10px;margin-top:18px}
+.secondary{padding:14px;border-radius:14px;background:#24242c;color:#fff;font-weight:700}.share{padding:14px;border-radius:14px;background:#fff;color:#111;font-weight:800}
+.note{color:#777783;font-size:11px;text-align:center;margin-top:18px;line-height:1.5}.hide{display:none}
+</style>
+</head>
+<body>
+<div class="app">
+<div class="brand">🎬 Movie<span>Match</span></div>
+
+<section id="home" class="hero">
+<div class="emoji">🍿</div>
+<h1>Find the movie you NEED to watch tonight.</h1>
+<p class="sub">Answer 5 quick questions and we'll match your mood with a movie.</p>
+<button class="primary" onclick="start()">START THE TEST →</button>
+</section>
+
+<section id="quiz" class="hide">
+<div class="progress"><div id="bar" class="bar"></div></div>
+<div id="qnum" class="qnum"></div><h2 id="question"></h2>
+<div id="options" class="options"></div>
+</section>
+
+<section id="result" class="result hide">
+<div class="emoji">🎯</div><div class="badge" id="type"></div>
+<h1>Your Movie Match</h1>
+<div class="movie">
+<h3 id="movie"></h3><div class="meta" id="meta"></div>
+<div class="why" id="why"></div><div class="matchline" id="matchline"></div>
+</div>
+<div class="actions">
+<button class="share" onclick="shareResult()">SHARE MY MATCH ↗</button>
+<button class="secondary" onclick="restart()">TRY ANOTHER TEST</button>
+</div>
+<p class="note">MovieMatch is a recommendation concept. Availability may vary by country and streaming service.</p>
+</section>
+</div>
+
+<script>
+const questions=[
+{q:"What's your mood tonight?",opts:[
+["😂","I want to laugh","Light & fun"],["🧠","I want to think","Mystery & mind games"],["❤️","I want feelings","Emotional & warm"],["😱","Give me suspense","Thriller & tension"]]},
+{q:"How much time do you have?",opts:[
+["⚡","Under 2 hours","Quick watch"],["🍿","Around 2 hours","Perfect movie night"],["🛋️","I have time","Longer story is fine"],["🌙","I can binge","Something absorbing"]]},
+{q:"Pick a setting.",opts:[
+["🏙️","Modern city","Real-world vibe"],["🌌","Strange / unknown","Something different"],["🏠","Relatable life","Characters I understand"],["🗺️","A whole new world","Adventure"]]},
+{q:"What matters most?",opts:[
+["🤣","Entertainment","Keep me hooked"],["🤯","Plot twist","Surprise me"],["🥹","Emotions","Make me feel something"],["✨","Experience","Great atmosphere"]]},
+{q:"Who are you watching with?",opts:[
+["🙋","Just me","My choice"],["👯","Friends","Something everyone enjoys"],["❤️","Partner","Something with feelings"],["👨‍👩‍👧","Family","Easy to watch together"]]}
+];
+
+/* Each movie has a preference score for each question.
+   0 = first option, 1 = second, 2 = third, 3 = fourth.
+*/
+const movies=[
+{type:"THE COMFORT WATCHER 🛋️",movie:"3 Idiots",meta:"Comedy • Drama",tags:[0,1,2,0,1],why:"Funny, emotional and extremely relatable — a strong all-round movie-night choice."},
+{type:"THE ADVENTURER 🗺️",movie:"Zindagi Na Milegi Dobara",meta:"Comedy • Drama • Adventure",tags:[0,2,0,2,1],why:"A feel-good journey about friendship, adventure and enjoying life."},
+{type:"THE HEARTFELT WATCHER ❤️",movie:"Dangal",meta:"Drama • Sports • Family",tags:[2,1,2,2,3],why:"An emotional, motivating story that works especially well for a family movie night."},
+{type:"THE STORY LOVER ✨",movie:"Taare Zameen Par",meta:"Drama • Family",tags:[2,1,2,2,3],why:"Warm, meaningful and emotional, with a story that stays with you."},
+{type:"THE FRIENDSHIP FAN 👯",movie:"Chhichhore",meta:"Comedy • Drama",tags:[0,2,2,2,1],why:"Funny and emotional with strong friendship energy — perfect for watching with friends."},
+{type:"THE FEEL-GOOD PICK 🌈",movie:"Queen",meta:"Comedy • Drama",tags:[0,1,0,2,0],why:"A funny, uplifting journey about confidence, independence and finding yourself."},
+{type:"THE EASY WATCHER 🍿",movie:"Karwaan",meta:"Comedy • Drama",tags:[0,1,0,0,1],why:"A relaxed, funny road-trip story when you want something easy and enjoyable."},
+{type:"THE TWIST HUNTER 🧠",movie:"Andhadhun",meta:"Mystery • Thriller • Comedy",tags:[1,1,0,1,0],why:"Clever, unpredictable and full of turns for a night when you want to keep guessing."},
+{type:"THE MYSTERY SOLVER 🔎",movie:"Drishyam",meta:"Crime • Mystery • Thriller",tags:[3,2,2,1,0],why:"A tense mystery that rewards attention and makes you rethink every detail."},
+{type:"THE MIND-BENDER 🤯",movie:"Inception",meta:"Sci‑Fi • Thriller",tags:[1,1,1,1,0],why:"A layered puzzle for when you want to think about the movie long after it ends."},
+{type:"THE BIG-IDEA WATCHER 🌌",movie:"Interstellar",meta:"Sci‑Fi • Adventure • Drama",tags:[1,2,3,3,0],why:"Big ideas, huge atmosphere and an emotional story for an immersive movie night."},
+{type:"THE ANIMATED GEM 🕷️",movie:"Spider-Man: Into the Spider-Verse",meta:"Animation • Action • Adventure",tags:[0,1,3,3,1],why:"Fast, funny and visually inventive — a great crowd-friendly adventure."},
+{type:"THE WARM-HEARTED WATCHER 💛",movie:"Coco",meta:"Animation • Adventure • Family",tags:[2,1,3,2,3],why:"Beautiful, emotional and family-friendly, with music and a memorable story."},
+{type:"THE EMOTIONAL PICK 🥹",movie:"Inside Out",meta:"Animation • Comedy • Family",tags:[0,1,2,2,3],why:"A thoughtful and emotional story that turns feelings into an unforgettable adventure."},
+{type:"THE CURIOUS ONE 🌀",movie:"The Truman Show",meta:"Drama • Comedy • Sci‑Fi",tags:[1,1,0,1,0],why:"A clever idea-driven movie that makes you question what is real."},
+{type:"THE FUN MYSTERY 🔐",movie:"Knives Out",meta:"Mystery • Comedy • Crime",tags:[0,1,0,1,1],why:"A playful mystery with clues, humour and plenty to discuss afterward."},
+{type:"THE ADVENTURE NIGHT 🗺️",movie:"Jumanji: Welcome to the Jungle",meta:"Comedy • Adventure • Fantasy",tags:[0,2,3,0,1],why:"Easygoing adventure and comedy that works especially well with friends."},
+{type:"THE COZY PICK ☕",movie:"Paddington 2",meta:"Comedy • Family • Adventure",tags:[0,1,3,2,3],why:"Warm, funny and wholesome when you want a comforting movie."},
+{type:"THE INSPIRATION SEEKER 🌟",movie:"12th Fail",meta:"Drama • Biography",tags:[2,2,2,2,0],why:"An inspiring, grounded story about persistence when you want something meaningful."},
+{type:"THE BIG HEART 💫",movie:"The Pursuit of Happyness",meta:"Drama • Biography",tags:[2,2,0,2,0],why:"Emotional and motivating — a strong choice when you want a story with heart."},
+{type:"THE LIGHTHEARTED PICK 😄",movie:"Hera Pheri",meta:"Comedy",tags:[0,1,0,0,1],why:"Pure fun and memorable comedy when the only goal is to have a good time."},
+{type:"THE FAMILY FAVOURITE 👨‍👩‍👧",movie:"Hum Aapke Hain Koun..!",meta:"Comedy • Romance • Family",tags:[0,2,2,0,3],why:"A long, celebratory family watch with humour, warmth and memorable moments."}
+];
+
+let answers=[],step=0;
+function start(){home.classList.add("hide");result.classList.add("hide");quiz.classList.remove("hide");answers=[];step=0;render()}
+function render(){
+const item=questions[step];qnum.textContent=`QUESTION ${step+1} OF ${questions.length}`;question.textContent=item.q;
+bar.style.width=((step+1)/questions.length*100)+"%";options.innerHTML="";
+item.opts.forEach((o,i)=>{const b=document.createElement("button");b.className="option";b.innerHTML=`<b>${o[0]} ${o[1]}</b><small>${o[2]}</small>`;b.onclick=()=>choose(i);options.appendChild(b)})
+}
+function choose(i){answers.push(i);step++;if(step<questions.length)render();else showResult()}
+function showResult(){
+quiz.classList.add("hide");result.classList.remove("hide");
+let best=[],bestScore=-1;
+movies.forEach(m=>{
+let score=0;
+answers.forEach((a,q)=>{if(a===m.tags[q])score+=3;else if(Math.abs(a-m.tags[q])===1)score+=1});
+if(score>bestScore){bestScore=score;best=[m]}else if(score===bestScore)best.push(m)
+});
+const r=best[Math.floor(Math.random()*best.length)];
+type.textContent=r.type;movie.textContent=r.movie;meta.textContent=r.meta;why.textContent=r.why;
+matchline.textContent=`${bestScore >= 12 ? "Strong" : bestScore >= 8 ? "Great" : "Good"} match based on your answers`;
+window.scrollTo({top:0,behavior:"smooth"})
+}
+async function shareResult(){
+const text=`My MovieMatch is ${movie.textContent} 🍿 Find yours: ${location.href}`;
+if(navigator.share){try{await navigator.share({title:"MovieMatch",text,url:location.href})}catch(e){}}
+else{try{await navigator.clipboard.writeText(text);alert("Match copied!")}catch(e){alert("Copy this page link and share it.")}}
+}
+function restart(){start()}
+</script>
+</body>
+</html>
