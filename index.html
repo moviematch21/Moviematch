@@ -5,6 +5,52 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>MovieMatch — Find Your Movie</title>
 <meta name="description" content="Answer 5 quick questions and discover a movie match made for your mood.">
+   /* Navigation and information pages */
+.site-nav {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 16px;
+  margin: 0 0 28px;
+  padding: 14px 0;
+  border-top: 1px solid #292932;
+  border-bottom: 1px solid #292932;
+}
+.site-nav a {
+  color: #ff86a9;
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+}
+.info-page {
+  margin-top: 28px;
+  padding: 22px;
+  background: #18181f;
+  border: 1px solid #2b2b35;
+  border-radius: 18px;
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+.info-page h2 {
+  color: #ff86a9;
+  margin-bottom: 12px;
+}
+.info-page p,
+.info-page li {
+  color: #d6d6df;
+  font-size: 14px;
+}
+.info-page a {
+  color: #ff86a9;
+}
+.site-footer {
+  margin-top: 30px;
+  padding: 18px 0;
+  border-top: 1px solid #292932;
+  text-align: center;
+  color: #aaaab5;
+  font-size: 12px;
+}
 <style>
 *{box-sizing:border-box}
 body{margin:0;font-family:Arial,sans-serif;background:#0d0d12;color:#fff;min-height:100vh}
@@ -58,7 +104,61 @@ button{border:0;cursor:pointer;font:inherit}.primary{width:100%;padding:16px;bor
 <p class="note">MovieMatch is a recommendation concept. Availability may vary by country and streaming service.</p>
 </section>
 </div>
+<nav class="site-nav" aria-label="Main navigation">
+  <a href="#about">About Us</a>
+  <a href="#contact">Contact Us</a>
+  <a href="#privacy">Privacy Policy</a>
+   <a href="#terms">Terms &amp; Conditions</a>
+<a href="#disclaimer">Disclaimer</a>
+</nav>
 
+<section id="about" class="info-page">
+  <h2>About MovieMatch</h2>
+  <p>Welcome to MovieMatch, a movie discovery website designed to help you find a movie based on your mood and preferences.</p>
+  <p>Answer five quick questions and explore a movie recommendation that may suit your movie night.</p>
+  <p>Our goal is to make choosing your next movie simple, fun and enjoyable. MovieMatch is an independent recommendation concept and is not affiliated with the movies or streaming services mentioned.</p>
+</section>
+
+<section id="contact" class="info-page">
+  <h2>Contact Us</h2>
+  <p>Have a question, suggestion or feedback about MovieMatch? We would love to hear from you.</p>
+  <p>Contact the website owner by email:
+    <a href="mailto:sadiya604zz@gmail.com">sadiya604zz@gmail.com</a>
+  </p>
+</section>
+
+<section id="privacy" class="info-page">
+  <h2>Privacy Policy</h2>
+  <p><strong>Last updated:</strong> October 11, 2026</p>
+  <p>MovieMatch provides movie recommendations based on the answers selected in the quiz.</p>
+  <p>The quiz is designed to process your selections in your browser. Do not enter sensitive personal information into the website.</p>
+  <p>When you use the share feature, your browser may open its sharing options or copy a link, depending on your device and browser.</p>
+  <p>Our hosting provider may process technical information required to deliver and secure this website.</p>
+  <p>If advertising services such as Google AdSense are added in the future, those services may use cookies or similar technologies, subject to applicable policies and consent requirements.</p>
+  <p>For privacy questions, contact the website owner at
+    <a href="mailto:sadiya604zz@gmail.com">sadiya604zz@gmail.com</a>.
+  </p>
+</section>
+<section id="terms" class="info-page">
+  <h2>Terms &amp; Conditions</h2>
+  <p>Welcome to MovieMatch. By using this website, you agree to these terms.</p>
+  <p>MovieMatch provides entertainment recommendations for informational purposes only. Movie suggestions are not guarantees of quality or availability.</p>
+  <p>Movie titles and related trademarks belong to their respective owners.</p>
+  <p>Please use this website responsibly and do not misuse its features.</p>
+</section>
+
+<section id="disclaimer" class="info-page">
+  <h2>Disclaimer</h2>
+  <p>MovieMatch is an independent movie recommendation website. It is not affiliated with or endorsed by any movie studio or streaming service.</p>
+  <p>Recommendations are provided for general entertainment purposes. Availability may vary by country and streaming platform.</p>
+  <p>For questions, contact us at
+    <a href="mailto:sadiya604zz@gmail.com">sadiya604zz@gmail.com</a>.
+  </p>
+</section>
+<footer class="site-footer">
+  <p>MovieMatch — Find your movie match.</p>
+  <p>Independent movie recommendations for entertainment purposes.</p>
+</footer>
 <script>
 const questions=[
 {q:"What's your mood tonight?",opts:[
