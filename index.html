@@ -224,7 +224,7 @@ matchline.textContent=`${bestScore >= 12 ? "Strong" : bestScore >= 8 ? "Great" :
 window.scrollTo({top:0,behavior:"smooth"})
 }
 async function shareResult(){
-const text=`My MovieMatch is ${movie.textContent} 🍿 Find yours: ${location.href}`;
+const text=`My MovieMatch is ${movie.textContent} 🍿 Find yours!`;
 if(navigator.share){try{await navigator.share({title:"MovieMatch",text,url:location.href})}catch(e){}}
 else{try{await navigator.clipboard.writeText(text);alert("Match copied!")}catch(e){alert("Copy this page link and share it.")}}
 }
